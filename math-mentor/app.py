@@ -87,7 +87,7 @@ elif mode == "Image":
     )
 
     if uploaded_image:
-        st.image(uploaded_image, caption="Uploaded Image", width="100%")
+        st.image(uploaded_image, caption="Uploaded Image", use_container_width=True)
 
         # Lazy import (IMPORTANT)
         from multimodal.ocr import extract_text
