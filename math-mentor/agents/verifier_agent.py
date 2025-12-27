@@ -1,5 +1,6 @@
 from openai import OpenAI
 import json
+import os
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 def verify_solution(problem_text, solution_text):
