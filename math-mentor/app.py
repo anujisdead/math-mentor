@@ -5,7 +5,7 @@ import os
 import streamlit as st
 
 # Inject Streamlit secrets into environment BEFORE agent imports
-if general in st.secrets and "OPENAI_API_KEY" in st.secrets[secrets]:
+if "general" in st.secrets and "OPENAI_API_KEY" in st.secrets["general"]:
     os.environ["OPENAI_API_KEY"] = st.secrets["general"]["OPENAI_API_KEY"]
 
 # Fix OpenMP duplicate issue (safe on cloud)
