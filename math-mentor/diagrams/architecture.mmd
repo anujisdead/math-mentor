@@ -1,0 +1,17 @@
+flowchart TD
+    A[User Input<br/>Text / Image / Audio] --> B[OCR / ASR]
+    B --> C[Human Verification]
+    C --> D[Parser Agent]
+
+    D -->|Ambiguous| H[HITL Clarification]
+    D -->|Valid| E[Memory Lookup]
+
+    E --> F[RAG Retriever]
+    F --> G[Solver Agent]
+    G --> I[Verifier Agent]
+
+    I -->|Low Confidence| H
+    I -->|High Confidence| J[Explainer Agent]
+
+    J --> K[Final Answer]
+    K --> L[Memory Store]
