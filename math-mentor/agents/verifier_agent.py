@@ -1,8 +1,7 @@
 from openai import OpenAI
 import json
 
-client = OpenAI()
-
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 def verify_solution(problem_text, solution_text):
     prompt = f"""
 You are a strict math verifier.

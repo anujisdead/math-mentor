@@ -2,8 +2,7 @@ from openai import OpenAI
 import json
 import os
 
-client = OpenAI()
-
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 def parse_problem(raw_text: str):
     prompt = f"""
 You are a strict parser for a JEE-level MATH mentor.

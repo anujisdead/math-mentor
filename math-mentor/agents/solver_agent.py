@@ -1,7 +1,7 @@
 from openai import OpenAI
 import os
 
-client = OpenAI()
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def solve_problem(parsed_problem, retrieved_docs):
     context = "\n\n".join([doc.page_content for doc in retrieved_docs])
