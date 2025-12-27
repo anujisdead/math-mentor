@@ -10,7 +10,16 @@ warnings.filterwarnings("ignore", category=UserWarning)
 import streamlit as st
 import tempfile
 import os
+if "OPENAI_API_KEY" in st.secrets:
+    os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
+
+# ONLY NOW import agents
+from agents.parser_agent import parse_problem
+from agents.solver_agent import solve_problem
+from agents.verifier_agent import verify_solution
+from agents.explainer_agent import explain_solution
 # -------------------------
 # Multimodal
 # -------------------------
