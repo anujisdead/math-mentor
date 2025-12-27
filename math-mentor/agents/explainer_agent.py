@@ -1,29 +1,24 @@
 import os
-
 from openai import OpenAI
-import os
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-def explain_solution(problem_text, solution_text):
+def explain_solution(problem: str, solution: str) -> str:
+    """
+    Generates a student-friendly explanation.
+    """
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
     prompt = f"""
-You are a JEE Mathematics tutor.
+You are a math tutor explaining solutions to students.
 
 Problem:
-{problem_text}
+{problem}
 
-Solved Answer:
-{solution_text}
+Solution:
+{solution}
 
-Explain the solution step-by-step in a clear, student-friendly manner.
-Rules:
-- Start from the basic idea
-- Explain why each step is taken
-- Avoid skipping steps
-- Use simple language
-- End with the final answer clearly highlighted
-
-Explanation:
+Explain the solution step-by-step in simple language.
+Avoid jargon where possible.
 """
 
     response = client.chat.completions.create(

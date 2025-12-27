@@ -1,31 +1,27 @@
-from openai import OpenAI
-import json
 import os
+import json
+from openai import OpenAI
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-def verify_solution(problem_text, solution_text):
+
+def verify_solution(problem: str, solution: str) -> dict:
+    """
+    Verifies correctness and confidence of the solution.
+    """
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
     prompt = f"""
 You are a strict math verifier.
 
 Problem:
-{problem_text}
+{problem}
 
-Proposed solution:
-{solution_text}
+Proposed Solution:
+{solution}
 
-Tasks:
-1. Check correctness
-2. Check logical steps
-3. Identify missing cases or errors
-4. Rate confidence from 0 to 1
-
-Respond ONLY in JSON:
-
-{{
-  "is_correct": true/false,
-  "confidence": 0.0,
-  "issues": ""
-}}
+Return STRICT JSON:
+- is_correct (true/false)
+- confidence (0.0 to 1.0)
+- issues (string, empty if none)
 """
 
     response = client.chat.completions.create(

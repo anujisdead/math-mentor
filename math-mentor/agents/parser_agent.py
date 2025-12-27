@@ -1,37 +1,32 @@
-from openai import OpenAI
-import json
 import os
+import json
+from openai import OpenAI
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-def parse_problem(raw_text: str):
+
+def parse_problem(text: str) -> dict:
+    """
+    Parses raw math problem text into structured JSON.
+    """
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
     prompt = f"""
-You are a strict parser for a JEE-level MATH mentor.
+You are a math problem parser.
 
-Tasks:
-1. Clean the problem text
-2. Identify if the problem is IN-SCOPE (math only)
-   Allowed topics:
-   - algebra
-   - probability
-   - calculus
-   - linear_algebra
-3. Extract variables and constraints if present
-4. Detect ambiguity or missing information
-
-Return ONLY valid JSON in the following format:
-
-{{
-  "problem_text": "...",
-  "topic": "...",
-  "variables": [],
-  "constraints": [],
-  "needs_clarification": true/false,
-  "is_in_scope": true/false,
-  "reason_if_out_of_scope": ""
-}}
+Given the following input, extract structured information.
 
 Problem:
-\"\"\"{raw_text}\"\"\"
+{text}
+
+Return STRICT JSON with fields:
+- problem_text
+- topic (algebra, calculus, probability, linear_algebra, or other)
+- variables (list)
+- constraints (list)
+- needs_clarification (true/false)
+- is_in_scope (true/false)
+- reason_if_out_of_scope (string)
+
+Do not add explanations. Return JSON only.
 """
 
     response = client.chat.completions.create(
