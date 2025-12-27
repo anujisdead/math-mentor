@@ -1,25 +1,24 @@
 # =================================================
-# ENV MUST LOAD FIRST (before any OpenAI imports)
+# STREAMLIT CLOUD SECRET INJECTION (CRITICAL)
 # =================================================
-from dotenv import load_dotenv
-load_dotenv()
-
-import warnings
-warnings.filterwarnings("ignore", category=UserWarning)
-
-import streamlit as st
-import tempfile
 import os
+import streamlit as st
+
+# Inject Streamlit secrets into environment BEFORE agent imports
 if "OPENAI_API_KEY" in st.secrets:
     os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
+# Fix OpenMP duplicate issue (safe on cloud)
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
-# ONLY NOW import agents
-from agents.parser_agent import parse_problem
-from agents.solver_agent import solve_problem
-from agents.verifier_agent import verify_solution
-from agents.explainer_agent import explain_solution
+# =================================================
+# NOW SAFE TO IMPORT EVERYTHING ELSE
+# =================================================
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning)
+
+import tempfile
+
 # -------------------------
 # Multimodal
 # -------------------------
@@ -27,7 +26,7 @@ from multimodal.ocr import extract_text
 from multimodal.asr import transcribe_audio
 
 # -------------------------
-# Agents
+# Agents (IMPORTANT: after secret injection)
 # -------------------------
 from agents.parser_agent import parse_problem
 from agents.solver_agent import solve_problem
@@ -43,6 +42,7 @@ from rag.retriever import retrieve_context
 # Memory
 # -------------------------
 from memory.memory_store import search_memory, add_memory
+
 
 # -------------------------
 # Streamlit Config
