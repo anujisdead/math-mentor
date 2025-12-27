@@ -1,36 +1,41 @@
-import easyocr
 import numpy as np
 from PIL import Image
+import easyocr
+import streamlit as st
 
-# Load OCR model once
-reader = easyocr.Reader(["en"], gpu=False)
+# Cache OCR model so it loads only once
+@st.cache_resource
+def load_ocr_reader():
+    return easyocr.Reader(["en"], gpu=False)
 
 
 def extract_text(uploaded_file):
     """
-    Takes a Streamlit UploadedFile and returns (text, confidence)
+    Safe OCR for Streamlit UploadedFile
+    Returns (text, confidence)
     """
+    try:
+        # IMPORTANT: reset file pointer
+        uploaded_file.seek(0)
 
-    # Convert uploaded file → PIL Image
-    image = Image.open(uploaded_file).convert("RGB")
+        # Convert to image
+        image = Image.open(uploaded_file).convert("RGB")
+        img_np = np.array(image)
 
-    # PIL → NumPy
-    img_np = np.array(image)
+        reader = load_ocr_reader()
+        results = reader.readtext(img_np)
 
-    # Run OCR
-    results = reader.readtext(img_np)
+        if not results:
+            return "", 0.0
 
-    if not results:
+        texts, confidences = [], []
+        for _, text, conf in results:
+            texts.append(text)
+            confidences.append(conf)
+
+        return " ".join(texts), round(sum(confidences) / len(confidences), 2)
+
+    except Exception as e:
+        # This prevents Streamlit hard crash
+        st.error(f"OCR failed: {e}")
         return "", 0.0
-
-    texts = []
-    confidences = []
-
-    for bbox, text, conf in results:
-        texts.append(text)
-        confidences.append(conf)
-
-    full_text = " ".join(texts)
-    avg_conf = sum(confidences) / len(confidences)
-
-    return full_text, round(avg_conf, 2)
