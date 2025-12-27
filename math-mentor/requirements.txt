@@ -5,6 +5,7 @@ easyocr
 pillow
 numpy
 torch
+openai-whisper
 langchain
 langchain-openai
 langchain-community
