@@ -1,7 +1,12 @@
 streamlit
-python-dotenv
 openai
-faiss-cpu
-numpy
-pandas
+python-dotenv
+easyocr
 pillow
+numpy
+torch
+langchain
+langchain-openai
+langchain-community
+faiss-cpu
+sentence-transformers
