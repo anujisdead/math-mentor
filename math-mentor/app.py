@@ -89,6 +89,9 @@ elif mode == "Image":
     if uploaded_image:
         st.image(uploaded_image, caption="Uploaded Image", width="100%")
 
+        # Lazy import (IMPORTANT)
+        from multimodal.ocr import extract_text
+
         text, conf = extract_text(uploaded_image)
 
         st.subheader("OCR Extracted Text")
@@ -101,6 +104,7 @@ elif mode == "Image":
         st.write(f"**OCR Confidence:** {conf}")
         if conf < 0.85:
             st.warning("⚠️ Low OCR confidence detected. Human verification recommended.")
+
 
 # =================================================
 # AUDIO INPUT
@@ -115,6 +119,9 @@ elif mode == "Audio":
         with tempfile.NamedTemporaryFile(delete=False) as tmp:
             tmp.write(audio_file.read())
             audio_path = tmp.name
+
+        # Lazy import (IMPORTANT)
+        from multimodal.asr import transcribe_audio
 
         transcript = transcribe_audio(audio_path)
 
